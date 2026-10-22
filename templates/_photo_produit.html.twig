@@ -1,0 +1,9 @@
+{# Affiche la photo d'un produit, ou un emplacement vide s'il n'en a pas.
+   Variables : produit, hauteur (en pixels) #}
+{% if produit.photo %}
+    <img src="{{ asset('uploads/produits/' ~ produit.photo) }}" alt="{{ produit.nom }}"
+         class="card-img-top object-fit-cover" style="height: {{ hauteur }}px">
+{% else %}
+    <div class="card-img-top bg-secondary-subtle d-flex align-items-center justify-content-center text-muted"
+         style="height: {{ hauteur }}px">{{ 'produit.sans_photo'|trans }}</div>
+{% endif %}

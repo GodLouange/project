@@ -1,0 +1,5 @@
+{# Page 404 : page ou produit introuvable #}
+{% extends '@Twig/Exception/error.html.twig' %}
+
+{% block titre %}{{ 'erreur.404.titre'|trans }}{% endblock %}
+{% block message %}{{ 'erreur.404.message'|trans }}{% endblock %}

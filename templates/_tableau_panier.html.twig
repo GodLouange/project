@@ -1,0 +1,40 @@
+{# Tableau des lignes d'un panier, partagé par la page Panier et la page Contenu de la commande.
+   Variables : panier, avec_suppression (true = bouton de suppression sur chaque ligne) #}
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>{{ 'tableau.produit'|trans }}</th>
+                <th class="text-end">{{ 'tableau.quantite'|trans }}</th>
+                <th class="text-end">{{ 'tableau.prix'|trans }}</th>
+                <th class="text-end">{{ 'tableau.montant'|trans }}</th>
+                {% if avec_suppression %}<th></th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for ligne in panier.contenus %}
+                <tr>
+                    <td><a href="{{ path('app_produit_fiche', {id: ligne.produit.id}) }}">{{ ligne.produit.nom }}</a></td>
+                    <td class="text-end">{{ ligne.quantite }}</td>
+                    <td class="text-end">{{ ligne.produit.prix|number_format(2, ',', ' ') ~ ' €' }}</td>
+                    <td class="text-end">{{ ligne.montant|number_format(2, ',', ' ') ~ ' €' }}</td>
+                    {% if avec_suppression %}
+                        <td class="text-end">
+                            <form method="post" action="{{ path('app_panier_supprimer', {id: ligne.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('supprimer_ligne_' ~ ligne.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">{{ 'bouton.supprimer'|trans }}</button>
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="fw-bold fs-5">
+                <td colspan="3" class="text-end">{{ 'tableau.total'|trans }}</td>
+                <td class="text-end">{{ panier.total|number_format(2, ',', ' ') ~ ' €' }}</td>
+                {% if avec_suppression %}<td></td>{% endif %}
+            </tr>
+        </tfoot>
+    </table>
+</div>

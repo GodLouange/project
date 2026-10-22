@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'commande.titre'|trans({'%id%': panier.id}) }}{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_compte') }}" class="btn btn-link px-0 mb-3">← {{ 'bouton.retour_compte'|trans }}</a>
+
+    <h1>{{ 'commande.titre'|trans({'%id%': panier.id}) }}</h1>
+    <p class="text-muted mb-4">
+        {{ 'commande.date'|trans }} : {{ panier.dateAchat|date('d/m/Y H:i') }}
+    </p>
+
+    {# Même tableau que la page Panier, sans suppression ni achat #}
+    {% include '_tableau_panier.html.twig' with {panier: panier, avec_suppression: false} %}
+{% endblock %}

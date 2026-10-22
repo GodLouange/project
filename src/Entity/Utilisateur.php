@@ -6,11 +6,18 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Internaute inscrit sur la boutique.
+ * Rôles possibles : ROLE_USER (tout le monde), ROLE_ADMIN, ROLE_SUPER_ADMIN.
+ */
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'utilisateur.email.deja_utilise')]
 class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -18,39 +25,58 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    // Adresse e-mail, utilisée comme identifiant de connexion
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    #[Assert\Length(max: 180)]
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * Rôles de l'utilisateur (ROLE_USER est toujours ajouté automatiquement).
+     *
+     * @var list<string>
      */
     #[ORM\Column]
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * Mot de passe haché (jamais le mot de passe en clair).
+     *
+     * @var string
      */
     #[ORM\Column]
     private ?string $password = null;
 
+    // Nom de famille
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 100)]
     private ?string $nom = null;
 
+    // Prénom
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 100)]
     private ?string $prenom = null;
 
+    // Date d'inscription, remplie automatiquement (utile pour le SUPER_ADMIN)
     #[ORM\Column]
     private ?\DateTimeImmutable $dateInscription = null;
 
     /**
+     * Paniers (en cours et payés) de l'utilisateur.
+     *
      * @var Collection<int, Panier>
      */
-    #[ORM\OneToMany(targetEntity: Panier::class, mappedBy: 'Utilisateur', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Panier::class, mappedBy: 'utilisateur', orphanRemoval: true)]
     private Collection $paniers;
 
     public function __construct()
     {
         $this->paniers = new ArrayCollection();
+        // Date d'inscription renseignée automatiquement à la création du compte
+        $this->dateInscription = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -63,7 +89,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
 
@@ -71,7 +97,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
+     * Identifiant visuel de l'utilisateur (ici son e-mail).
      *
      * @see UserInterface
      */
@@ -86,10 +112,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // Chaque utilisateur possède au minimum ROLE_USER
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
     /**
@@ -118,13 +144,14 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
+     * Évite de stocker le vrai hash du mot de passe dans la session
+     * (on n'y garde qu'une empreinte CRC32C, supporté depuis Symfony 7.3).
      */
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
-        
+        $data["\0".self::class."\0password"] = hash('crc32c', (string) $this->password);
+
         return $data;
     }
 
@@ -133,7 +160,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): static
     {
         $this->nom = $nom;
 
@@ -145,7 +172,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(?string $prenom): static
     {
         $this->prenom = $prenom;
 
@@ -185,7 +212,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePanier(Panier $panier): static
     {
         if ($this->paniers->removeElement($panier)) {
-            // set the owning side to null (unless already changed)
+            // On détache le panier de l'utilisateur (sauf s'il a déjà été modifié)
             if ($panier->getUtilisateur() === $this) {
                 $panier->setUtilisateur(null);
             }

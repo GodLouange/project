@@ -10,6 +10,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
+ * Requêtes sur les utilisateurs.
+ *
  * @extends ServiceEntityRepository<Utilisateur>
  */
 class UtilisateurRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
@@ -20,12 +22,12 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
     }
 
     /**
-     * Used to upgrade (rehash) the user's password automatically over time.
+     * Met à jour (re-hache) automatiquement le mot de passe quand l'algorithme évolue.
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof Utilisateur) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         $user->setPassword($newHashedPassword);
@@ -33,28 +35,23 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
         $this->getEntityManager()->flush();
     }
 
-//    /**
-//     * @return Utilisateur[] Returns an array of Utilisateur objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * Utilisateurs inscrits aujourd'hui, du plus récent au plus ancien (pour le SUPER_ADMIN).
+     *
+     * @return Utilisateur[]
+     */
+    public function findInscritsAujourdhui(): array
+    {
+        $debut = new \DateTimeImmutable('today');     // aujourd'hui à 00:00:00
+        $fin = new \DateTimeImmutable('tomorrow');    // demain à 00:00:00
 
-//    public function findOneBySomeField($value): ?Utilisateur
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.dateInscription >= :debut')
+            ->andWhere('u.dateInscription < :fin')
+            ->setParameter('debut', $debut)
+            ->setParameter('fin', $fin)
+            ->orderBy('u.dateInscription', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'panier.titre'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">{{ 'panier.titre'|trans }}</h1>
+
+    {% if panier and panier.contenus is not empty %}
+        {% include '_tableau_panier.html.twig' with {panier: panier, avec_suppression: true} %}
+
+        {# Achat (fictif) du panier #}
+        <form method="post" action="{{ path('app_panier_acheter') }}" class="text-end">
+            <input type="hidden" name="_token" value="{{ csrf_token('acheter_panier') }}">
+            <button type="submit" class="btn btn-success btn-lg">💳 {{ 'bouton.acheter'|trans }}</button>
+        </form>
+    {% else %}
+        <p class="text-muted">{{ 'panier.vide'|trans }}</p>
+        <a href="{{ path('app_accueil') }}" class="btn btn-primary">{{ 'bouton.voir_produits'|trans }}</a>
+    {% endif %}
+{% endblock %}

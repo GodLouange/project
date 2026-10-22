@@ -1,0 +1,140 @@
+# Textes de l'interface en français (domaine "messages")
+
+site:
+    nom: Ma Boutique
+    pied_de_page: "© %annee% Ma Boutique — projet e-commerce EEMI"
+
+menu:
+    accueil: Accueil
+    panier: Mon panier
+    compte: Mon compte
+    connexion: Connexion
+    inscription: Inscription
+    deconnexion: Déconnexion
+    bonjour: "Bonjour %prenom%"
+    super_admin:
+        paniers: Paniers non achetés
+        utilisateurs: Inscrits du jour
+
+bouton:
+    ajouter: Ajouter
+    ajouter_panier: Ajouter au panier
+    modifier: Modifier
+    supprimer: Supprimer
+    enregistrer: Enregistrer
+    acheter: Acheter le panier
+    voir: Voir
+    voir_produits: Voir les produits
+    retour: Retour
+    retour_accueil: Retour à l'accueil
+    retour_compte: Retour à mon compte
+    se_connecter: Se connecter
+    inscrire: Créer mon compte
+
+accueil:
+    titre: Nos produits
+    aucun_produit: Aucun produit pour le moment.
+
+produit:
+    ajouter: Ajouter un produit
+    modifier: Modifier le produit
+    sans_photo: Pas de photo
+    photo_actuelle: Photo actuelle
+    en_stock: "%stock% en stock"
+    rupture: Rupture de stock
+    connexion_requise: Connectez-vous pour ajouter ce produit à votre panier.
+    confirmer_suppression: Voulez-vous vraiment supprimer ce produit ?
+
+panier:
+    titre: Mon panier
+    vide: Le panier est vide.
+
+compte:
+    titre: Mon compte
+    profil: Mon profil
+    historique: Historique de mes commandes
+    aucune_commande: Vous n'avez encore passé aucune commande.
+
+commande:
+    titre: "Commande n°%id%"
+    date: Date de la commande
+
+tableau:
+    produit: Produit
+    quantite: Quantité
+    prix: Prix unitaire
+    montant: Montant
+    total: Total
+    numero_commande: N° de commande
+    date: Date
+    heure_inscription: Heure d'inscription
+    roles: Rôles
+
+super_admin:
+    paniers:
+        titre: Paniers non achetés
+        numero: "Panier n°%id%"
+        utilisateur: Utilisateur
+        aucun: Aucun panier en attente.
+    utilisateurs:
+        titre: Utilisateurs inscrits aujourd'hui
+        aucun: Personne ne s'est inscrit aujourd'hui.
+
+connexion:
+    titre: Connexion
+    pas_de_compte: Pas encore de compte ?
+
+inscription:
+    titre: Inscription
+    deja_inscrit: Déjà inscrit ?
+
+form:
+    prenom: Prénom
+    nom: Nom
+    email: E-mail
+    mot_de_passe: Mot de passe
+    mot_de_passe_confirmation: Confirmation du mot de passe
+    nouveau_mot_de_passe: Nouveau mot de passe
+    nouveau_mot_de_passe.aide: Laissez vide pour garder le mot de passe actuel.
+    quantite: Quantité
+    produit:
+        nom: Nom du produit
+        description: Description
+        prix: Prix
+        stock: Stock
+        photo: Photo (JPG, PNG, WEBP – 2 Mo max)
+
+flash:
+    formulaire:
+        invalide: Le formulaire contient des erreurs, merci de les corriger.
+    csrf:
+        invalide: Jeton de sécurité invalide, merci de réessayer.
+    inscription:
+        succes: Bienvenue ! Votre compte a bien été créé.
+    profil:
+        modifie: Votre profil a bien été mis à jour.
+    produit:
+        ajoute: Le produit a bien été ajouté.
+        modifie: Le produit a bien été modifié.
+        supprime: Le produit a bien été supprimé.
+        suppression_impossible: Ce produit figure dans des commandes payées, il ne peut pas être supprimé.
+    panier:
+        ajoute: "« %produit% » a été ajouté à votre panier."
+        stock_insuffisant: "Stock insuffisant : il ne reste que %stock% exemplaire(s)."
+        ligne_supprimee: Le produit a été retiré du panier.
+        vide: Votre panier est vide.
+    achat:
+        succes: "Merci ! Votre commande n°%id% a bien été payée."
+        stock_insuffisant: "Stock insuffisant pour « %produit% » (%stock% disponible(s)). Modifiez votre panier."
+
+erreur:
+    titre: "Erreur %code%"
+    generique:
+        titre: Oups, une erreur est survenue
+        message: Nous sommes désolés, réessayez dans quelques instants.
+    "404":
+        titre: Page introuvable
+        message: La page ou le produit que vous cherchez n'existe pas.
+    "403":
+        titre: Accès refusé
+        message: Vous n'avez pas les droits nécessaires pour accéder à cette page.

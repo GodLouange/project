@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'accueil.titre'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">{{ 'accueil.titre'|trans }}</h1>
+
+    {# ===== Ajout d'un produit : visible uniquement par un ADMIN ===== #}
+    {% if form %}
+        <details class="card mb-4" {{ form.vars.submitted ? 'open' }}>
+            <summary class="card-header fw-bold">➕ {{ 'produit.ajouter'|trans }}</summary>
+            <div class="card-body">
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <button type="submit" class="btn btn-success">{{ 'bouton.ajouter'|trans }}</button>
+                {{ form_end(form) }}
+            </div>
+        </details>
+    {% endif %}
+
+    {# ===== Liste des produits ===== #}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+        {% for produit in produits %}
+            <div class="col">
+                <a href="{{ path('app_produit_fiche', {id: produit.id}) }}" class="card h-100 text-decoration-none text-reset shadow-sm">
+                    {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 200} %}
+                    <div class="card-body">
+                        <h2 class="h5 card-title">{{ produit.nom }}</h2>
+                        <p class="card-text fw-bold mb-1">{{ produit.prix|number_format(2, ',', ' ') ~ ' €' }}</p>
+                        {% if produit.stock > 0 %}
+                            <span class="badge text-bg-success">{{ 'produit.en_stock'|trans({'%stock%': produit.stock}) }}</span>
+                        {% else %}
+                            <span class="badge text-bg-danger">{{ 'produit.rupture'|trans }}</span>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+        {% else %}
+            <p class="text-muted">{{ 'accueil.aucun_produit'|trans }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,140 @@
+# Interface texts in English ("messages" domain)
+
+site:
+    nom: My Shop
+    pied_de_page: "© %annee% My Shop — EEMI e-commerce project"
+
+menu:
+    accueil: Home
+    panier: My cart
+    compte: My account
+    connexion: Log in
+    inscription: Sign up
+    deconnexion: Log out
+    bonjour: "Hello %prenom%"
+    super_admin:
+        paniers: Unpaid carts
+        utilisateurs: Today's sign-ups
+
+bouton:
+    ajouter: Add
+    ajouter_panier: Add to cart
+    modifier: Edit
+    supprimer: Delete
+    enregistrer: Save
+    acheter: Buy the cart
+    voir: View
+    voir_produits: See products
+    retour: Back
+    retour_accueil: Back to home
+    retour_compte: Back to my account
+    se_connecter: Log in
+    inscrire: Create my account
+
+accueil:
+    titre: Our products
+    aucun_produit: No products yet.
+
+produit:
+    ajouter: Add a product
+    modifier: Edit product
+    sans_photo: No picture
+    photo_actuelle: Current picture
+    en_stock: "%stock% in stock"
+    rupture: Out of stock
+    connexion_requise: Log in to add this product to your cart.
+    confirmer_suppression: Do you really want to delete this product?
+
+panier:
+    titre: My cart
+    vide: The cart is empty.
+
+compte:
+    titre: My account
+    profil: My profile
+    historique: My order history
+    aucune_commande: You have not placed any order yet.
+
+commande:
+    titre: "Order #%id%"
+    date: Order date
+
+tableau:
+    produit: Product
+    quantite: Quantity
+    prix: Unit price
+    montant: Amount
+    total: Total
+    numero_commande: Order no.
+    date: Date
+    heure_inscription: Sign-up time
+    roles: Roles
+
+super_admin:
+    paniers:
+        titre: Unpaid carts
+        numero: "Cart #%id%"
+        utilisateur: User
+        aucun: No pending cart.
+    utilisateurs:
+        titre: Users who signed up today
+        aucun: Nobody signed up today.
+
+connexion:
+    titre: Log in
+    pas_de_compte: No account yet?
+
+inscription:
+    titre: Sign up
+    deja_inscrit: Already registered?
+
+form:
+    prenom: First name
+    nom: Last name
+    email: Email
+    mot_de_passe: Password
+    mot_de_passe_confirmation: Confirm password
+    nouveau_mot_de_passe: New password
+    nouveau_mot_de_passe.aide: Leave empty to keep your current password.
+    quantite: Quantity
+    produit:
+        nom: Product name
+        description: Description
+        prix: Price
+        stock: Stock
+        photo: Picture (JPG, PNG, WEBP – 2 MB max)
+
+flash:
+    formulaire:
+        invalide: The form contains errors, please fix them.
+    csrf:
+        invalide: Invalid security token, please try again.
+    inscription:
+        succes: Welcome! Your account has been created.
+    profil:
+        modifie: Your profile has been updated.
+    produit:
+        ajoute: The product has been added.
+        modifie: The product has been updated.
+        supprime: The product has been deleted.
+        suppression_impossible: This product is part of paid orders, it cannot be deleted.
+    panier:
+        ajoute: "\"%produit%\" has been added to your cart."
+        stock_insuffisant: "Not enough stock: only %stock% left."
+        ligne_supprimee: The product has been removed from the cart.
+        vide: Your cart is empty.
+    achat:
+        succes: "Thank you! Your order #%id% has been paid."
+        stock_insuffisant: "Not enough stock for \"%produit%\" (%stock% available). Please update your cart."
+
+erreur:
+    titre: "Error %code%"
+    generique:
+        titre: Oops, something went wrong
+        message: Sorry, please try again in a few moments.
+    "404":
+        titre: Page not found
+        message: The page or product you are looking for does not exist.
+    "403":
+        titre: Access denied
+        message: You do not have permission to access this page.

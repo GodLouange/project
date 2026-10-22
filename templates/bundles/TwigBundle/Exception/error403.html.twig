@@ -1,0 +1,5 @@
+{# Page 403 : accès refusé (rôle insuffisant ou commande d'un autre utilisateur) #}
+{% extends '@Twig/Exception/error.html.twig' %}
+
+{% block titre %}{{ 'erreur.403.titre'|trans }}{% endblock %}
+{% block message %}{{ 'erreur.403.message'|trans }}{% endblock %}

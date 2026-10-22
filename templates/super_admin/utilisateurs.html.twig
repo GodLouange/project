@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'super_admin.utilisateurs.titre'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">{{ 'super_admin.utilisateurs.titre'|trans }}</h1>
+
+    {% if utilisateurs is not empty %}
+        {# Trié du plus récent au plus ancien (voir UtilisateurRepository::findInscritsAujourdhui) #}
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>{{ 'tableau.heure_inscription'|trans }}</th>
+                    <th>{{ 'form.prenom'|trans }}</th>
+                    <th>{{ 'form.nom'|trans }}</th>
+                    <th>{{ 'form.email'|trans }}</th>
+                    <th>{{ 'tableau.roles'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for utilisateur in utilisateurs %}
+                    <tr>
+                        <td>{{ utilisateur.dateInscription|date('H:i:s') }}</td>
+                        <td>{{ utilisateur.prenom }}</td>
+                        <td>{{ utilisateur.nom }}</td>
+                        <td>{{ utilisateur.email }}</td>
+                        <td>{{ utilisateur.roles|join(', ') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">{{ 'super_admin.utilisateurs.aucun'|trans }}</p>
+    {% endif %}
+{% endblock %}

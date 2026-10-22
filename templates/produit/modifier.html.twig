@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'produit.modifier'|trans }}{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_produit_fiche', {id: produit.id}) }}" class="btn btn-link px-0 mb-3">← {{ 'bouton.retour'|trans }}</a>
+
+    <h1 class="mb-4">{{ 'produit.modifier'|trans }}</h1>
+
+    <div class="row g-4">
+        <div class="col-md-8">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button type="submit" class="btn btn-primary">{{ 'bouton.enregistrer'|trans }}</button>
+            {{ form_end(form) }}
+        </div>
+
+        {# Photo actuelle (conservée si aucun nouveau fichier n'est envoyé) #}
+        <div class="col-md-4">
+            <p class="fw-bold">{{ 'produit.photo_actuelle'|trans }}</p>
+            <div class="card">
+                {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 200} %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

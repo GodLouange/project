@@ -1,3 +1,15 @@
+/* Styles personnalisés de la boutique (en complément de Bootstrap) */
 body {
-    background-color: skyblue;
+    background-color: #f8f9fa;
+}
+
+/* Effet au survol des cartes produits de l'accueil */
+a.card:hover {
+    transform: translateY(-2px);
+    transition: transform .15s ease-in-out;
+}
+
+/* Titre cliquable du formulaire d'ajout de produit */
+details > summary {
+    cursor: pointer;
 }

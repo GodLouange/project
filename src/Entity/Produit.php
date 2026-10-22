@@ -7,7 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Produit vendu dans la boutique.
+ */
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
 {
@@ -16,25 +20,36 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
+    // Nom du produit (obligatoire, 255 caractères max)
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $nom = null;
 
+    // Description détaillée du produit
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
+    // Prix unitaire en euros (strictement positif)
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\Positive]
     private ?float $prix = null;
 
-    #[ORM\Column(length: 255)]
+    // Quantité disponible (0 = rupture de stock)
+    #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\PositiveOrZero]
+    private ?int $stock = null;
+
+    // Nom du fichier image stocké dans public/uploads/produits (peut être vide)
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
     /**
-     * @var Collection<int, ContenuPanier>
-     */
-    #[ORM\OneToMany(targetEntity: ContenuPanier::class, mappedBy: 'produit', orphanRemoval: true)]
-    private Collection $contenus;
-
-    /**
+     * Lignes de panier qui contiennent ce produit.
+     *
      * @var Collection<int, ContenuPanier>
      */
     #[ORM\OneToMany(targetEntity: ContenuPanier::class, mappedBy: 'produit')]
@@ -42,7 +57,6 @@ class Produit
 
     public function __construct()
     {
-        $this->contenus = new ArrayCollection();
         $this->contenuPaniers = new ArrayCollection();
     }
 
@@ -56,7 +70,7 @@ class Produit
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(?string $nom): static
     {
         $this->nom = $nom;
 
@@ -68,7 +82,7 @@ class Produit
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -80,9 +94,21 @@ class Produit
         return $this->prix;
     }
 
-    public function setPrix(float $prix): static
+    public function setPrix(?float $prix): static
     {
         $this->prix = $prix;
+
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(?int $stock): static
+    {
+        $this->stock = $stock;
 
         return $this;
     }
@@ -92,39 +118,9 @@ class Produit
         return $this->photo;
     }
 
-    public function setPhoto(string $photo): static
+    public function setPhoto(?string $photo): static
     {
         $this->photo = $photo;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ContenuPanier>
-     */
-    public function getContenus(): Collection
-    {
-        return $this->contenus;
-    }
-
-    public function addContenu(ContenuPanier $contenu): static
-    {
-        if (!$this->contenus->contains($contenu)) {
-            $this->contenus->add($contenu);
-            $contenu->setProduit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContenu(ContenuPanier $contenu): static
-    {
-        if ($this->contenus->removeElement($contenu)) {
-            // set the owning side to null (unless already changed)
-            if ($contenu->getProduit() === $this) {
-                $contenu->setProduit(null);
-            }
-        }
 
         return $this;
     }
@@ -150,7 +146,7 @@ class Produit
     public function removeContenuPanier(ContenuPanier $contenuPanier): static
     {
         if ($this->contenuPaniers->removeElement($contenuPanier)) {
-            // set the owning side to null (unless already changed)
+            // On détache la ligne du produit (sauf si elle a déjà été modifiée)
             if ($contenuPanier->getProduit() === $this) {
                 $contenuPanier->setProduit(null);
             }

@@ -1,0 +1,6 @@
+# Messages de validation personnalisés en français (domaine "validators").
+# Les messages standards de Symfony (NotBlank, Email...) sont déjà traduits automatiquement.
+
+utilisateur.email.deja_utilise: Un compte existe déjà avec cette adresse e-mail.
+form.mot_de_passe.different: Les deux mots de passe ne correspondent pas.
+panier.quantite.stock_insuffisant: "La quantité ne peut pas dépasser le stock disponible ({{ compared_value }})."

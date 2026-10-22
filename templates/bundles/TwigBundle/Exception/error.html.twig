@@ -1,0 +1,14 @@
+{# Page d'erreur générique personnalisée (500 et autres codes).
+   Les pages 403 et 404 surchargent les blocs "code" et "message". #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'erreur.titre'|trans({'%code%': status_code}) }}{% endblock %}
+
+{% block body %}
+    <div class="text-center py-5">
+        <p class="display-1 fw-bold text-secondary">{% block code %}{{ status_code }}{% endblock %}</p>
+        <h1 class="h3 mb-3">{% block titre %}{{ 'erreur.generique.titre'|trans }}{% endblock %}</h1>
+        <p class="text-muted mb-4">{% block message %}{{ 'erreur.generique.message'|trans }}{% endblock %}</p>
+        <a href="{{ path('app_accueil') }}" class="btn btn-primary">{{ 'bouton.retour_accueil'|trans }}</a>
+    </div>
+{% endblock %}

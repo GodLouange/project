@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'super_admin.paniers.titre'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">{{ 'super_admin.paniers.titre'|trans }}</h1>
+
+    {% for panier in paniers %}
+        <div class="card mb-4">
+            <div class="card-header d-flex flex-wrap justify-content-between gap-2">
+                <span class="fw-bold">{{ 'super_admin.paniers.numero'|trans({'%id%': panier.id}) }}</span>
+                <span>
+                    {{ 'super_admin.paniers.utilisateur'|trans }} :
+                    {{ panier.utilisateur.prenom }} {{ panier.utilisateur.nom }}
+                    &lt;{{ panier.utilisateur.email }}&gt;
+                </span>
+            </div>
+            <div class="card-body">
+                {% if panier.contenus is not empty %}
+                    {% include '_tableau_panier.html.twig' with {panier: panier, avec_suppression: false} %}
+                {% else %}
+                    <p class="text-muted mb-0">{{ 'panier.vide'|trans }}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted">{{ 'super_admin.paniers.aucun'|trans }}</p>
+    {% endfor %}
+{% endblock %}
