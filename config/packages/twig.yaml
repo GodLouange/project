@@ -1,6 +1,5 @@
 twig:
     file_name_pattern: '*.twig'
-    # Les formulaires utilisent automatiquement les classes Bootstrap 5
     form_themes: ['bootstrap_5_layout.html.twig']
 
 when@test:

@@ -1,8 +1,6 @@
-# Interface texts in English ("messages" domain)
-
 site:
     nom: My Shop
-    pied_de_page: "© %annee% My Shop — EEMI e-commerce project"
+    pied_de_page: "© %annee% My Shop - EEMI project"
 
 menu:
     accueil: Home
@@ -34,6 +32,10 @@ bouton:
 accueil:
     titre: Our products
     aucun_produit: No products yet.
+    nb_produits: "%count% product(s)"
+    hero:
+        titre: Welcome to My Shop
+        texte: Browse our products and order in a few clicks.
 
 produit:
     ajouter: Add a product
@@ -48,6 +50,8 @@ produit:
 panier:
     titre: My cart
     vide: The cart is empty.
+    recapitulatif: Summary
+    paiement_fictif: Fake payment, nothing is charged.
 
 compte:
     titre: My account

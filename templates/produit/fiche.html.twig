@@ -3,52 +3,57 @@
 {% block title %}{{ produit.nom }}{% endblock %}
 
 {% block body %}
-    <a href="{{ path('app_accueil') }}" class="btn btn-link px-0 mb-3">← {{ 'bouton.retour_accueil'|trans }}</a>
+    <a href="{{ path('app_accueil') }}" class="lien-retour"><i class="bi bi-arrow-left"></i> {{ 'bouton.retour_accueil'|trans }}</a>
 
-    <div class="row g-4">
-        <div class="col-md-5">
-            <div class="card">
-                {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 350} %}
+    <div class="row g-4 g-lg-5">
+        <div class="col-md-6">
+            <div class="fiche-photo">
+                {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 460} %}
             </div>
         </div>
 
-        <div class="col-md-7">
-            <h1>{{ produit.nom }}</h1>
-            <p class="fs-3 fw-bold">{{ produit.prix|number_format(2, ',', ' ') ~ ' €' }}</p>
-
+        <div class="col-md-6">
             {% if produit.stock > 0 %}
-                <p><span class="badge text-bg-success">{{ 'produit.en_stock'|trans({'%stock%': produit.stock}) }}</span></p>
+                <span class="stock ok">{{ 'produit.en_stock'|trans({'%stock%': produit.stock}) }}</span>
             {% else %}
-                <p><span class="badge text-bg-danger">{{ 'produit.rupture'|trans }}</span></p>
+                <span class="stock ko">{{ 'produit.rupture'|trans }}</span>
             {% endif %}
 
-            <p style="white-space: pre-line">{{ produit.description }}</p>
+            <h1 class="mt-3 mb-1">{{ produit.nom }}</h1>
+            <p class="fiche-prix">{{ produit.prix|number_format(2, ',', ' ') ~ ' €' }}</p>
 
-            {# ===== Ajout au panier : uniquement si connecté ===== #}
+            <p class="fiche-description">{{ produit.description }}</p>
+
             {% if form %}
-                {{ form_start(form, {attr: {class: 'row g-2 align-items-end my-3'}}) }}
-                    <div class="col-auto">{{ form_row(form.quantite) }}</div>
-                    <div class="col-auto mb-3">
-                        <button type="submit" class="btn btn-primary">🛒 {{ 'bouton.ajouter_panier'|trans }}</button>
-                    </div>
-                {{ form_end(form) }}
+                <div class="boite-achat">
+                    {{ form_start(form, {attr: {class: 'd-flex flex-wrap align-items-end gap-3'}}) }}
+                        <div>{{ form_row(form.quantite) }}</div>
+                        <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                            <i class="bi bi-bag-plus"></i> {{ 'bouton.ajouter_panier'|trans }}
+                        </button>
+                    {{ form_end(form) }}
+                </div>
             {% elseif not app.user %}
-                <div class="alert alert-info">
-                    {{ 'produit.connexion_requise'|trans }}
-                    <a href="{{ path('app_connexion') }}">{{ 'menu.connexion'|trans }}</a>
+                <div class="alert alert-info my-4">
+                    <i class="bi bi-person-lock"></i>
+                    <span>
+                        {{ 'produit.connexion_requise'|trans }}
+                        <a href="{{ path('app_connexion') }}" class="fw-semibold">{{ 'menu.connexion'|trans }}</a>
+                    </span>
                 </div>
             {% endif %}
 
-            {# ===== Actions ADMIN : modifier / supprimer ===== #}
             {% if is_granted('ROLE_ADMIN') %}
-                <hr>
-                <div class="d-flex gap-2">
-                    <a href="{{ path('app_produit_modifier', {id: produit.id}) }}" class="btn btn-warning">✏️ {{ 'bouton.modifier'|trans }}</a>
+                <div class="actions-admin">
+                    <span class="etiquette">Admin</span>
+                    <a href="{{ path('app_produit_modifier', {id: produit.id}) }}" class="btn btn-outline-dark">
+                        <i class="bi bi-pencil"></i> {{ 'bouton.modifier'|trans }}
+                    </a>
 
                     <form method="post" action="{{ path('app_produit_supprimer', {id: produit.id}) }}"
                           onsubmit="return confirm('{{ 'produit.confirmer_suppression'|trans|e('js') }}')">
                         <input type="hidden" name="_token" value="{{ csrf_token('supprimer_produit_' ~ produit.id) }}">
-                        <button type="submit" class="btn btn-danger">🗑️ {{ 'bouton.supprimer'|trans }}</button>
+                        <button type="submit" class="btn btn-outline-danger"><i class="bi bi-trash3"></i> {{ 'bouton.supprimer'|trans }}</button>
                     </form>
                 </div>
             {% endif %}

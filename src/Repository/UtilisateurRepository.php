@@ -9,11 +9,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
-/**
- * Requêtes sur les utilisateurs.
- *
- * @extends ServiceEntityRepository<Utilisateur>
- */
+/** @extends ServiceEntityRepository<Utilisateur> */
 class UtilisateurRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -21,9 +17,6 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
         parent::__construct($registry, Utilisateur::class);
     }
 
-    /**
-     * Met à jour (re-hache) automatiquement le mot de passe quand l'algorithme évolue.
-     */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof Utilisateur) {
@@ -35,15 +28,11 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * Utilisateurs inscrits aujourd'hui, du plus récent au plus ancien (pour le SUPER_ADMIN).
-     *
-     * @return Utilisateur[]
-     */
+    /** @return Utilisateur[] */
     public function findInscritsAujourdhui(): array
     {
-        $debut = new \DateTimeImmutable('today');     // aujourd'hui à 00:00:00
-        $fin = new \DateTimeImmutable('tomorrow');    // demain à 00:00:00
+        $debut = new \DateTimeImmutable('today');     
+        $fin = new \DateTimeImmutable('tomorrow');    
 
         return $this->createQueryBuilder('u')
             ->andWhere('u.dateInscription >= :debut')

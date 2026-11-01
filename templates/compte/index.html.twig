@@ -5,46 +5,57 @@
 {% block body %}
     <h1 class="mb-4">{{ 'compte.titre'|trans }}</h1>
 
-    <div class="row g-5">
-        {# ===== Modification du profil ===== #}
+    <div class="row g-4">
         <div class="col-lg-5">
-            <h2 class="h4">{{ 'compte.profil'|trans }}</h2>
-            {{ form_start(form) }}
-                {{ form_widget(form) }}
-                <button type="submit" class="btn btn-primary">{{ 'bouton.enregistrer'|trans }}</button>
-            {{ form_end(form) }}
+            <div class="carte carte-corps h-100">
+                <h2 class="h4 mb-4 d-flex align-items-center gap-2">
+                    <span class="icone-ronde"><i class="bi bi-person"></i></span> {{ 'compte.profil'|trans }}
+                </h2>
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2"></i> {{ 'bouton.enregistrer'|trans }}</button>
+                {{ form_end(form) }}
+            </div>
         </div>
 
-        {# ===== Historique des commandes ===== #}
         <div class="col-lg-7">
-            <h2 class="h4">{{ 'compte.historique'|trans }}</h2>
+            <div class="carte carte-corps h-100">
+                <h2 class="h4 mb-3 d-flex align-items-center gap-2">
+                    <span class="icone-ronde"><i class="bi bi-receipt"></i></span> {{ 'compte.historique'|trans }}
+                </h2>
 
-            {% if commandes is not empty %}
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>{{ 'tableau.numero_commande'|trans }}</th>
-                            <th class="text-end">{{ 'tableau.montant'|trans }}</th>
-                            <th>{{ 'tableau.date'|trans }}</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for commande in commandes %}
-                            <tr>
-                                <td>#{{ commande.id }}</td>
-                                <td class="text-end">{{ commande.total|number_format(2, ',', ' ') ~ ' €' }}</td>
-                                <td>{{ commande.dateAchat|date('d/m/Y H:i') }}</td>
-                                <td class="text-end">
-                                    <a href="{{ path('app_compte_commande', {id: commande.id}) }}" class="btn btn-sm btn-outline-primary">{{ 'bouton.voir'|trans }}</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p class="text-muted">{{ 'compte.aucune_commande'|trans }}</p>
-            {% endif %}
+                {% if commandes is not empty %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>{{ 'tableau.numero_commande'|trans }}</th>
+                                    <th>{{ 'tableau.date'|trans }}</th>
+                                    <th class="text-end">{{ 'tableau.montant'|trans }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for commande in commandes %}
+                                    <tr>
+                                        <td class="fw-semibold">#{{ commande.id }}</td>
+                                        <td class="text-muted">{{ commande.dateAchat|date('d/m/Y H:i') }}</td>
+                                        <td class="text-end fw-semibold">{{ commande.total|number_format(2, ',', ' ') ~ ' €' }}</td>
+                                        <td class="text-end">
+                                            <a href="{{ path('app_compte_commande', {id: commande.id}) }}" class="btn btn-sm btn-outline-dark">{{ 'bouton.voir'|trans }}</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="etat-vide py-4">
+                        <div class="icone"><i class="bi bi-receipt"></i></div>
+                        <p class="mb-0">{{ 'compte.aucune_commande'|trans }}</p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

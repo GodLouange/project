@@ -1,6 +1,3 @@
-# Custom validation messages in English ("validators" domain).
-# Symfony's standard messages (NotBlank, Email...) are already translated automatically.
-
 utilisateur.email.deja_utilise: An account already exists with this email address.
 form.mot_de_passe.different: The two passwords do not match.
 panier.quantite.stock_insuffisant: "The quantity cannot exceed the available stock ({{ compared_value }})."

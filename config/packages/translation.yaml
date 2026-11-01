@@ -1,5 +1,4 @@
 framework:
-    # Langue par défaut du site, et langues disponibles (choix via le menu FR / EN)
     default_locale: fr
     enabled_locales: ['fr', 'en']
     translator:

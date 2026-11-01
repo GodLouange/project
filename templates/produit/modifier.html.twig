@@ -3,23 +3,24 @@
 {% block title %}{{ 'produit.modifier'|trans }}{% endblock %}
 
 {% block body %}
-    <a href="{{ path('app_produit_fiche', {id: produit.id}) }}" class="btn btn-link px-0 mb-3">← {{ 'bouton.retour'|trans }}</a>
+    <a href="{{ path('app_produit_fiche', {id: produit.id}) }}" class="lien-retour"><i class="bi bi-arrow-left"></i> {{ 'bouton.retour'|trans }}</a>
 
     <h1 class="mb-4">{{ 'produit.modifier'|trans }}</h1>
 
     <div class="row g-4">
-        <div class="col-md-8">
-            {{ form_start(form) }}
-                {{ form_widget(form) }}
-                <button type="submit" class="btn btn-primary">{{ 'bouton.enregistrer'|trans }}</button>
-            {{ form_end(form) }}
+        <div class="col-lg-8">
+            <div class="carte carte-corps">
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check2"></i> {{ 'bouton.enregistrer'|trans }}</button>
+                {{ form_end(form) }}
+            </div>
         </div>
 
-        {# Photo actuelle (conservée si aucun nouveau fichier n'est envoyé) #}
-        <div class="col-md-4">
-            <p class="fw-bold">{{ 'produit.photo_actuelle'|trans }}</p>
-            <div class="card">
-                {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 200} %}
+        <div class="col-lg-4">
+            <div class="carte overflow-hidden">
+                {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 240} %}
+                <div class="p-3 fw-semibold">{{ 'produit.photo_actuelle'|trans }}</div>
             </div>
         </div>
     </div>

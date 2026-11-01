@@ -7,11 +7,7 @@ use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * Requêtes sur les paniers.
- *
- * @extends ServiceEntityRepository<Panier>
- */
+/** @extends ServiceEntityRepository<Panier> */
 class PanierRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -19,9 +15,6 @@ class PanierRepository extends ServiceEntityRepository
         parent::__construct($registry, Panier::class);
     }
 
-    /**
-     * Panier en cours (non payé) de l'utilisateur, ou null s'il n'en a pas.
-     */
     public function findPanierEnCours(Utilisateur $utilisateur): ?Panier
     {
         return $this->createQueryBuilder('p')
@@ -34,11 +27,7 @@ class PanierRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    /**
-     * Historique des commandes (paniers payés) de l'utilisateur, de la plus récente à la plus ancienne.
-     *
-     * @return Panier[]
-     */
+    /** @return Panier[] */
     public function findCommandes(Utilisateur $utilisateur): array
     {
         return $this->createQueryBuilder('p')
@@ -50,11 +39,7 @@ class PanierRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * Tous les paniers non achetés, avec leur utilisateur et leur contenu (pour le SUPER_ADMIN).
-     *
-     * @return Panier[]
-     */
+    /** @return Panier[] */
     public function findPaniersNonAchetes(): array
     {
         return $this->createQueryBuilder('p')

@@ -3,33 +3,47 @@
 {% block title %}{{ 'super_admin.utilisateurs.titre'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">{{ 'super_admin.utilisateurs.titre'|trans }}</h1>
+    <div class="titre-section">
+        <h1>{{ 'super_admin.utilisateurs.titre'|trans }}</h1>
+        <span class="compteur">{{ utilisateurs|length }}</span>
+    </div>
 
     {% if utilisateurs is not empty %}
-        {# Trié du plus récent au plus ancien (voir UtilisateurRepository::findInscritsAujourdhui) #}
-        <table class="table table-striped align-middle">
-            <thead>
-                <tr>
-                    <th>{{ 'tableau.heure_inscription'|trans }}</th>
-                    <th>{{ 'form.prenom'|trans }}</th>
-                    <th>{{ 'form.nom'|trans }}</th>
-                    <th>{{ 'form.email'|trans }}</th>
-                    <th>{{ 'tableau.roles'|trans }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for utilisateur in utilisateurs %}
-                    <tr>
-                        <td>{{ utilisateur.dateInscription|date('H:i:s') }}</td>
-                        <td>{{ utilisateur.prenom }}</td>
-                        <td>{{ utilisateur.nom }}</td>
-                        <td>{{ utilisateur.email }}</td>
-                        <td>{{ utilisateur.roles|join(', ') }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="carte table-carte">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>{{ 'tableau.heure_inscription'|trans }}</th>
+                            <th>{{ 'form.prenom'|trans }} / {{ 'form.nom'|trans }}</th>
+                            <th>{{ 'form.email'|trans }}</th>
+                            <th>{{ 'tableau.roles'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for utilisateur in utilisateurs %}
+                            <tr>
+                                <td class="text-muted"><i class="bi bi-clock me-1"></i>{{ utilisateur.dateInscription|date('H:i:s') }}</td>
+                                <td>
+                                    <span class="d-inline-flex align-items-center gap-2">
+                                        <span class="avatar">{{ utilisateur.prenom|first }}</span>
+                                        <span class="fw-semibold">{{ utilisateur.prenom }} {{ utilisateur.nom }}</span>
+                                    </span>
+                                </td>
+                                <td>{{ utilisateur.email }}</td>
+                                <td>
+                                    {% for role in utilisateur.roles %}<span class="badge-doux">{{ role }}</span>{% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% else %}
-        <p class="text-muted">{{ 'super_admin.utilisateurs.aucun'|trans }}</p>
+        <div class="carte etat-vide">
+            <div class="icone"><i class="bi bi-people"></i></div>
+            <p class="mb-0">{{ 'super_admin.utilisateurs.aucun'|trans }}</p>
+        </div>
     {% endif %}
 {% endblock %}

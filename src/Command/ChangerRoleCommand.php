@@ -11,18 +11,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-/**
- * Donne un rôle à un utilisateur existant.
- *
- * Exemples :
- *   php bin/console app:changer-role admin@boutique.fr ROLE_ADMIN
- *   php bin/console app:changer-role super@boutique.fr ROLE_SUPER_ADMIN
- *   php bin/console app:changer-role client@boutique.fr ROLE_USER   (retire les droits admin)
- */
 #[AsCommand(name: 'app:changer-role', description: 'Attribue ROLE_USER, ROLE_ADMIN ou ROLE_SUPER_ADMIN à un utilisateur')]
 class ChangerRoleCommand extends Command
 {
-    // Rôles autorisés par l'application
     private const ROLES = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
 
     public function __construct(
@@ -58,7 +49,6 @@ class ChangerRoleCommand extends Command
             return Command::FAILURE;
         }
 
-        // ROLE_USER est implicite : on ne stocke que le rôle "supérieur"
         $utilisateur->setRoles('ROLE_USER' === $role ? [] : [$role]);
         $this->em->flush();
 

@@ -3,27 +3,35 @@
 {% block title %}{{ 'super_admin.paniers.titre'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">{{ 'super_admin.paniers.titre'|trans }}</h1>
+    <div class="titre-section">
+        <h1>{{ 'super_admin.paniers.titre'|trans }}</h1>
+        <span class="compteur">{{ paniers|length }}</span>
+    </div>
 
     {% for panier in paniers %}
-        <div class="card mb-4">
-            <div class="card-header d-flex flex-wrap justify-content-between gap-2">
-                <span class="fw-bold">{{ 'super_admin.paniers.numero'|trans({'%id%': panier.id}) }}</span>
-                <span>
-                    {{ 'super_admin.paniers.utilisateur'|trans }} :
-                    {{ panier.utilisateur.prenom }} {{ panier.utilisateur.nom }}
-                    &lt;{{ panier.utilisateur.email }}&gt;
+        <div class="carte mb-4 overflow-hidden">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 px-4 py-3 border-bottom">
+                <span class="fw-bold"><i class="bi bi-cart3 me-1"></i> {{ 'super_admin.paniers.numero'|trans({'%id%': panier.id}) }}</span>
+                <span class="d-inline-flex align-items-center gap-2">
+                    <span class="avatar">{{ panier.utilisateur.prenom|first }}</span>
+                    <span>
+                        <span class="fw-semibold">{{ panier.utilisateur.prenom }} {{ panier.utilisateur.nom }}</span>
+                        <span class="text-muted small d-block">{{ panier.utilisateur.email }}</span>
+                    </span>
                 </span>
             </div>
-            <div class="card-body">
+            <div class="table-carte">
                 {% if panier.contenus is not empty %}
                     {% include '_tableau_panier.html.twig' with {panier: panier, avec_suppression: false} %}
                 {% else %}
-                    <p class="text-muted mb-0">{{ 'panier.vide'|trans }}</p>
+                    <p class="text-muted my-3">{{ 'panier.vide'|trans }}</p>
                 {% endif %}
             </div>
         </div>
     {% else %}
-        <p class="text-muted">{{ 'super_admin.paniers.aucun'|trans }}</p>
+        <div class="carte etat-vide">
+            <div class="icone"><i class="bi bi-cart-check"></i></div>
+            <p class="mb-0">{{ 'super_admin.paniers.aucun'|trans }}</p>
+        </div>
     {% endfor %}
 {% endblock %}

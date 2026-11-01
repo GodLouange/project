@@ -38,7 +38,7 @@ Se déconnecter / reconnecter pour que le nouveau rôle soit pris en compte.
 | `/compte/commande/{id}` | Contenu d'une commande | propriétaire |
 | `/super-admin/paniers` | Paniers non achetés | SUPER_ADMIN |
 | `/super-admin/utilisateurs` | Inscrits du jour (du plus récent au plus ancien) | SUPER_ADMIN |
-| `/connexion`, `/inscription`, `/deconnexion` | Authentification | — |
+| `/connexion`, `/inscription`, `/deconnexion` | Authentification | tous |
 | `/langue/fr`, `/langue/en` | Changement de langue | tous |
 
 ## Organisation du code

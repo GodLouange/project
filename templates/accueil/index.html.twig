@@ -3,40 +3,56 @@
 {% block title %}{{ 'accueil.titre'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">{{ 'accueil.titre'|trans }}</h1>
+    <section class="hero">
+        <h1>{{ 'accueil.hero.titre'|trans }}</h1>
+        <p>{{ 'accueil.hero.texte'|trans }}</p>
+        <a href="#produits" class="btn btn-light btn-lg">{{ 'bouton.voir_produits'|trans }} <i class="bi bi-arrow-down"></i></a>
+    </section>
 
-    {# ===== Ajout d'un produit : visible uniquement par un ADMIN ===== #}
     {% if form %}
-        <details class="card mb-4" {{ form.vars.submitted ? 'open' }}>
-            <summary class="card-header fw-bold">➕ {{ 'produit.ajouter'|trans }}</summary>
-            <div class="card-body">
+        <details class="carte panneau-admin" {{ form.vars.submitted ? 'open' }}>
+            <summary>
+                <span class="icone-ronde"><i class="bi bi-plus-lg"></i></span>
+                {{ 'produit.ajouter'|trans }}
+                <i class="bi bi-chevron-down"></i>
+            </summary>
+            <div class="carte-corps">
                 {{ form_start(form) }}
                     {{ form_widget(form) }}
-                    <button type="submit" class="btn btn-success">{{ 'bouton.ajouter'|trans }}</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i> {{ 'bouton.ajouter'|trans }}</button>
                 {{ form_end(form) }}
             </div>
         </details>
     {% endif %}
 
-    {# ===== Liste des produits ===== #}
+    <div class="titre-section" id="produits">
+        <h2 class="h1">{{ 'accueil.titre'|trans }}</h2>
+        {% if produits is not empty %}
+            <span class="compteur">{{ 'accueil.nb_produits'|trans({'%count%': produits|length}) }}</span>
+        {% endif %}
+    </div>
+
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
         {% for produit in produits %}
             <div class="col">
-                <a href="{{ path('app_produit_fiche', {id: produit.id}) }}" class="card h-100 text-decoration-none text-reset shadow-sm">
-                    {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 200} %}
-                    <div class="card-body">
-                        <h2 class="h5 card-title">{{ produit.nom }}</h2>
-                        <p class="card-text fw-bold mb-1">{{ produit.prix|number_format(2, ',', ' ') ~ ' €' }}</p>
-                        {% if produit.stock > 0 %}
-                            <span class="badge text-bg-success">{{ 'produit.en_stock'|trans({'%stock%': produit.stock}) }}</span>
-                        {% else %}
-                            <span class="badge text-bg-danger">{{ 'produit.rupture'|trans }}</span>
-                        {% endif %}
+                <a href="{{ path('app_produit_fiche', {id: produit.id}) }}" class="carte-produit">
+                    {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 240, avec_stock: true} %}
+                    <div class="carte-produit-corps">
+                        <h3 class="carte-produit-nom">{{ produit.nom }}</h3>
+                        <div class="carte-produit-pied">
+                            <span class="prix">{{ produit.prix|number_format(2, ',', ' ') ~ ' €' }}</span>
+                            <span class="voir-plus">{{ 'bouton.voir'|trans }} <i class="bi bi-arrow-right"></i></span>
+                        </div>
                     </div>
                 </a>
             </div>
         {% else %}
-            <p class="text-muted">{{ 'accueil.aucun_produit'|trans }}</p>
+            <div class="col-12">
+                <div class="carte etat-vide">
+                    <div class="icone"><i class="bi bi-box-seam"></i></div>
+                    <p class="mb-0">{{ 'accueil.aucun_produit'|trans }}</p>
+                </div>
+            </div>
         {% endfor %}
     </div>
 {% endblock %}

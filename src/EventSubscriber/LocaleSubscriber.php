@@ -7,9 +7,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-/**
- * Applique à chaque requête la langue mémorisée en session (choisie via LangueController).
- */
 class LocaleSubscriber implements EventSubscriberInterface
 {
     public function __construct(
@@ -22,7 +19,6 @@ class LocaleSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        // Pas de session existante (premier passage) : on garde la langue par défaut
         if (!$request->hasPreviousSession()) {
             return;
         }
@@ -32,7 +28,6 @@ class LocaleSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        // Priorité 20 : avant le LocaleListener de Symfony (priorité 16)
         return [
             KernelEvents::REQUEST => [['onKernelRequest', 20]],
         ];

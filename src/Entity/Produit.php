@@ -9,9 +9,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Produit vendu dans la boutique.
- */
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
 {
@@ -20,38 +17,29 @@ class Produit
     #[ORM\Column]
     private ?int $id = null;
 
-    // Nom du produit (obligatoire, 255 caractères max)
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     private ?string $nom = null;
 
-    // Description détaillée du produit
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
     private ?string $description = null;
 
-    // Prix unitaire en euros (strictement positif)
     #[ORM\Column]
     #[Assert\NotNull]
     #[Assert\Positive]
     private ?float $prix = null;
 
-    // Quantité disponible (0 = rupture de stock)
     #[ORM\Column]
     #[Assert\NotNull]
     #[Assert\PositiveOrZero]
     private ?int $stock = null;
 
-    // Nom du fichier image stocké dans public/uploads/produits (peut être vide)
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
-    /**
-     * Lignes de panier qui contiennent ce produit.
-     *
-     * @var Collection<int, ContenuPanier>
-     */
+    /** @var Collection<int, ContenuPanier> */
     #[ORM\OneToMany(targetEntity: ContenuPanier::class, mappedBy: 'produit')]
     private Collection $contenuPaniers;
 
@@ -125,9 +113,7 @@ class Produit
         return $this;
     }
 
-    /**
-     * @return Collection<int, ContenuPanier>
-     */
+    /** @return Collection<int, ContenuPanier> */
     public function getContenuPaniers(): Collection
     {
         return $this->contenuPaniers;
@@ -146,7 +132,6 @@ class Produit
     public function removeContenuPanier(ContenuPanier $contenuPanier): static
     {
         if ($this->contenuPaniers->removeElement($contenuPanier)) {
-            // On détache la ligne du produit (sauf si elle a déjà été modifiée)
             if ($contenuPanier->getProduit() === $this) {
                 $contenuPanier->setProduit(null);
             }

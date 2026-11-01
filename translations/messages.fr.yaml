@@ -1,8 +1,6 @@
-# Textes de l'interface en français (domaine "messages")
-
 site:
     nom: Ma Boutique
-    pied_de_page: "© %annee% Ma Boutique — projet e-commerce EEMI"
+    pied_de_page: "© %annee% Ma Boutique - projet EEMI"
 
 menu:
     accueil: Accueil
@@ -34,6 +32,10 @@ bouton:
 accueil:
     titre: Nos produits
     aucun_produit: Aucun produit pour le moment.
+    nb_produits: "%count% produit(s)"
+    hero:
+        titre: Bienvenue sur Ma Boutique
+        texte: Découvrez nos produits et passez commande en quelques clics.
 
 produit:
     ajouter: Ajouter un produit
@@ -48,6 +50,8 @@ produit:
 panier:
     titre: Mon panier
     vide: Le panier est vide.
+    recapitulatif: Récapitulatif
+    paiement_fictif: Paiement fictif, aucun débit réel.
 
 compte:
     titre: Mon compte
