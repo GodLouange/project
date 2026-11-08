@@ -1,3 +1,7 @@
+{#
+    Page de connexion.
+    Le formulaire est envoyé à /connexion et vérifié automatiquement par Symfony (form_login dans security.yaml).
+#}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'connexion.titre'|trans }}{% endblock %}
@@ -9,11 +13,13 @@
             <h1>{{ 'connexion.titre'|trans }}</h1>
         </div>
 
+        {# Erreur de connexion (identifiants invalides...), traduite grâce au domaine "security" de Symfony #}
         {% if erreur %}
             <div class="alert alert-danger"><i class="bi bi-exclamation-octagon-fill"></i> <span>{{ erreur.messageKey|trans(erreur.messageData, 'security') }}</span></div>
         {% endif %}
 
         <form method="post" action="{{ path('app_connexion') }}">
+            {# Les noms _username et _password sont ceux attendus par form_login #}
             <div class="mb-3">
                 <label for="username" class="form-label">{{ 'form.email'|trans }}</label>
                 <input type="email" value="{{ dernier_email }}" name="_username" id="username"
@@ -25,11 +31,13 @@
                        class="form-control" autocomplete="current-password" required>
             </div>
 
+            {# Jeton CSRF : empêche un autre site d'envoyer ce formulaire à la place de l'utilisateur #}
             <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
             <button class="btn btn-primary btn-lg w-100" type="submit">{{ 'bouton.se_connecter'|trans }}</button>
         </form>
 
+        {# Lien vers l'inscription #}
         <p class="separateur mb-0">
             {{ 'connexion.pas_de_compte'|trans }}
             <a href="{{ path('app_inscription') }}">{{ 'menu.inscription'|trans }}</a>

@@ -1,3 +1,9 @@
+{#
+    Page d'erreur personnalisée générique (500 et tous les codes sans page dédiée).
+    Placée dans templates/bundles/TwigBundle/Exception pour remplacer la page par défaut de Symfony.
+    Les pages 403 et 404 en héritent et ne changent que les blocs "titre" et "message".
+    En mode dev, on peut la tester avec /_error/500.
+#}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'erreur.titre'|trans({'%code%': status_code}) }}{% endblock %}

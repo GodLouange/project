@@ -12,6 +12,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Formulaire "Mon compte" : modification du profil.
+ * Le mot de passe est facultatif : laissé vide, il ne change pas.
+ */
 class ProfilType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -31,6 +35,7 @@ class ProfilType extends AbstractType
                 ],
                 'second_options' => ['label' => 'form.mot_de_passe_confirmation'],
                 'constraints' => [
+                    // Length ignore les valeurs vides : le champ reste facultatif
                     new Assert\Length(min: 6, max: 4096),
                 ],
             ]);

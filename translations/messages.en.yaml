@@ -1,8 +1,11 @@
+# Interface texts in English ("messages" domain) — mêmes clés que messages.fr.yaml.
+
 site:
     nom: My Shop
     pied_de_page: "© %annee% My Shop - EEMI project"
 
 menu:
+    langue: Language selection
     accueil: Home
     panier: My cart
     compte: My account
@@ -142,3 +145,8 @@ erreur:
     "403":
         titre: Access denied
         message: You do not have permission to access this page.
+
+# Libellés des rôles (badges du menu et étiquettes d'administration)
+role:
+    super_admin: Super admin
+    admin: Admin

@@ -1,3 +1,4 @@
+{# Mon compte : modification du profil + historique des commandes payées #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'compte.titre'|trans }}{% endblock %}
@@ -6,6 +7,7 @@
     <h1 class="mb-4">{{ 'compte.titre'|trans }}</h1>
 
     <div class="row g-4">
+        {# ===== Profil (ProfilType) : le nouveau mot de passe est facultatif ===== #}
         <div class="col-lg-5">
             <div class="carte carte-corps h-100">
                 <h2 class="h4 mb-4 d-flex align-items-center gap-2">
@@ -18,6 +20,7 @@
             </div>
         </div>
 
+        {# ===== Historique : numéro, date (remplie automatiquement à l'achat) et montant de chaque commande ===== #}
         <div class="col-lg-7">
             <div class="carte carte-corps h-100">
                 <h2 class="h4 mb-3 d-flex align-items-center gap-2">
@@ -41,6 +44,7 @@
                                         <td class="fw-semibold">#{{ commande.id }}</td>
                                         <td class="text-muted">{{ commande.dateAchat|date('d/m/Y H:i') }}</td>
                                         <td class="text-end fw-semibold">{{ commande.total|number_format(2, ',', ' ') ~ ' €' }}</td>
+                                        {# Lien vers le contenu de la commande #}
                                         <td class="text-end">
                                             <a href="{{ path('app_compte_commande', {id: commande.id}) }}" class="btn btn-sm btn-outline-dark">{{ 'bouton.voir'|trans }}</a>
                                         </td>
@@ -49,6 +53,7 @@
                             </tbody>
                         </table>
                     </div>
+                {# Aucune commande payée pour le moment #}
                 {% else %}
                     <div class="etat-vide py-4">
                         <div class="icone"><i class="bi bi-receipt"></i></div>

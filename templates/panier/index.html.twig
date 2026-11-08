@@ -1,3 +1,4 @@
+{# Panier : uniquement le panier NON PAYÉ de l'utilisateur connecté (PanierController::index) #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'panier.titre'|trans }}{% endblock %}
@@ -5,14 +6,17 @@
 {% block body %}
     <h1 class="mb-4">{{ 'panier.titre'|trans }}</h1>
 
+    {# On n'affiche le tableau que si un panier en cours existe et contient au moins une ligne #}
     {% if panier and panier.contenus is not empty %}
         <div class="row g-4">
+            {# Lignes du panier, avec bouton de suppression #}
             <div class="col-lg-8">
                 <div class="carte table-carte">
                     {% include '_tableau_panier.html.twig' with {panier: panier, avec_suppression: true} %}
                 </div>
             </div>
 
+            {# Récapitulatif : montant de chaque ligne et total #}
             <div class="col-lg-4">
                 <div class="carte carte-corps recapitulatif">
                     <h2 class="h4 mb-3">{{ 'panier.recapitulatif'|trans }}</h2>
@@ -27,6 +31,7 @@
                         <span>{{ panier.total|number_format(2, ',', ' ') ~ ' €' }}</span>
                     </div>
 
+                    {# Achat (fictif) du panier : formulaire POST protégé par un jeton CSRF #}
                     <form method="post" action="{{ path('app_panier_acheter') }}" class="mt-4">
                         <input type="hidden" name="_token" value="{{ csrf_token('acheter_panier') }}">
                         <button type="submit" class="btn btn-primary btn-lg w-100"><i class="bi bi-credit-card"></i> {{ 'bouton.acheter'|trans }}</button>
@@ -35,6 +40,7 @@
                 </div>
             </div>
         </div>
+    {# Panier vide #}
     {% else %}
         <div class="carte etat-vide">
             <div class="icone"><i class="bi bi-bag"></i></div>

@@ -1,8 +1,12 @@
+# Textes de l'interface en français (domaine "messages").
+# Dans Twig : {{ 'cle.sous_cle'|trans }} ; en PHP : $translator->trans('cle.sous_cle').
+
 site:
     nom: Ma Boutique
     pied_de_page: "© %annee% Ma Boutique - projet EEMI"
 
 menu:
+    langue: Choix de la langue
     accueil: Accueil
     panier: Mon panier
     compte: Mon compte
@@ -142,3 +146,8 @@ erreur:
     "403":
         titre: Accès refusé
         message: Vous n'avez pas les droits nécessaires pour accéder à cette page.
+
+# Libellés des rôles (badges du menu et étiquettes d'administration)
+role:
+    super_admin: Super admin
+    admin: Admin

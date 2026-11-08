@@ -1,14 +1,18 @@
+{# Page d'accueil : liste des produits (+ formulaire d'ajout pour un ADMIN) #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'accueil.titre'|trans }}{% endblock %}
 
 {% block body %}
+    {# Bannière d'accueil #}
     <section class="hero">
         <h1>{{ 'accueil.hero.titre'|trans }}</h1>
         <p>{{ 'accueil.hero.texte'|trans }}</p>
         <a href="#produits" class="btn btn-light btn-lg">{{ 'bouton.voir_produits'|trans }} <i class="bi bi-arrow-down"></i></a>
     </section>
 
+    {# ===== Ajout d'un produit : "form" n'existe que pour un ADMIN (voir AccueilController) ===== #}
+    {# Le bloc reste ouvert si le formulaire vient d'être envoyé avec des erreurs #}
     {% if form %}
         <details class="carte panneau-admin" {{ form.vars.submitted ? 'open' }}>
             <summary>
@@ -25,6 +29,7 @@
         </details>
     {% endif %}
 
+    {# ===== Liste des produits ===== #}
     <div class="titre-section" id="produits">
         <h2 class="h1">{{ 'accueil.titre'|trans }}</h2>
         {% if produits is not empty %}
@@ -35,6 +40,7 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
         {% for produit in produits %}
             <div class="col">
+                {# Toute la carte est un lien vers la fiche du produit #}
                 <a href="{{ path('app_produit_fiche', {id: produit.id}) }}" class="carte-produit">
                     {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 240, avec_stock: true} %}
                     <div class="carte-produit-corps">
@@ -46,6 +52,7 @@
                     </div>
                 </a>
             </div>
+        {# Message affiché quand il n'y a encore aucun produit #}
         {% else %}
             <div class="col-12">
                 <div class="carte etat-vide">

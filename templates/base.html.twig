@@ -1,3 +1,8 @@
+{#
+    Gabarit commun à toutes les pages du site.
+    Il contient l'en-tête (menu adapté au rôle), les messages flash et le pied de page.
+    Chaque page "étend" ce fichier et remplit les blocs "title" et "body".
+#}
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
     <head>
@@ -6,6 +11,7 @@
         <title>{% block title %}{{ 'site.nom'|trans }}{% endblock %} | {{ 'site.nom'|trans }}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><rect width=%22128%22 height=%22128%22 rx=%2230%22 fill=%22%231d1b18%22/><text x=%2264%22 y=%2290%22 font-size=%2272%22 text-anchor=%22middle%22 fill=%22%23faf7f2%22 font-family=%22Georgia%22>B</text></svg>">
 
+        {# Polices Google, Bootstrap 5 et icônes Bootstrap (chargés depuis un CDN) #}
         {% block stylesheets %}
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,13 +20,16 @@
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         {% endblock %}
 
+        {# JavaScript de l'application (Turbo, Stimulus, protection CSRF) via AssetMapper #}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
     <body class="d-flex flex-column min-vh-100">
+        {# Nom de la route courante : sert à surligner le lien actif du menu #}
         {% set route = app.request.attributes.get('_route') %}
 
+        {# ===== En-tête : les liens affichés dépendent du rôle de l'internaute ===== #}
         <header class="site-header sticky-top">
             <nav class="navbar navbar-expand">
                 <div class="container flex-wrap gap-3">
@@ -29,6 +38,7 @@
                         {{ 'site.nom'|trans }}
                     </a>
 
+                    {# Menu principal : Accueil pour tous, Panier et Mon compte seulement si connecté #}
                     <ul class="navbar-nav nav-principale me-auto gap-1">
                         <li class="nav-item">
                             <a class="nav-link {{ route == 'app_accueil' ? 'active' }}" href="{{ path('app_accueil') }}">
@@ -49,15 +59,16 @@
                         {% endif %}
                     </ul>
 
+                    {# Zone de droite : utilisateur connecté (prénom + badge de rôle) ou liens Connexion / Inscription #}
                     <div class="d-flex align-items-center flex-wrap gap-3">
                         {% if app.user %}
                             <span class="puce-utilisateur">
                                 <span class="avatar">{{ app.user.prenom|first }}</span>
                                 <span class="nom">{{ 'menu.bonjour'|trans({'%prenom%': app.user.prenom}) }}</span>
                                 {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                    <span class="badge-role super">SUPER ADMIN</span>
+                                    <span class="badge-role super">{{ 'role.super_admin'|trans|upper }}</span>
                                 {% elseif is_granted('ROLE_ADMIN') %}
-                                    <span class="badge-role admin">ADMIN</span>
+                                    <span class="badge-role admin">{{ 'role.admin'|trans|upper }}</span>
                                 {% endif %}
                             </span>
                             <a class="btn btn-icone btn-outline-dark" href="{{ path('app_deconnexion') }}"
@@ -69,7 +80,8 @@
                             <a class="btn btn-sm btn-dark" href="{{ path('app_inscription') }}">{{ 'menu.inscription'|trans }}</a>
                         {% endif %}
 
-                        <div class="choix-langue" role="group" aria-label="Langue / Language">
+                        {# Choix de la langue : enregistre fr / en en session (LangueController) #}
+                        <div class="choix-langue" role="group" aria-label="{{ 'menu.langue'|trans }}">
                             <a class="{{ app.request.locale == 'fr' ? 'actif' }}" href="{{ path('app_langue', {locale: 'fr'}) }}">FR</a>
                             <a class="{{ app.request.locale == 'en' ? 'actif' }}" href="{{ path('app_langue', {locale: 'en'}) }}">EN</a>
                         </div>
@@ -77,10 +89,11 @@
                 </div>
             </nav>
 
+            {# Barre supplémentaire réservée au SUPER_ADMIN : accès à ses deux pages #}
             {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <div class="barre-admin">
                     <div class="container">
-                        <span class="etiquette"><i class="bi bi-shield-lock"></i> Super admin</span>
+                        <span class="etiquette"><i class="bi bi-shield-lock"></i> {{ 'role.super_admin'|trans|upper }}</span>
                         <a class="{{ route == 'app_super_admin_paniers' ? 'active' }}" href="{{ path('app_super_admin_paniers') }}">
                             <i class="bi bi-cart3"></i> {{ 'menu.super_admin.paniers'|trans }}
                         </a>
@@ -93,6 +106,7 @@
         </header>
 
         <main class="container contenu-principal flex-grow-1">
+            {# ===== Messages flash (succès / échec des actions), avec une icône selon le type ===== #}
             {% set icones_flash = {success: 'check-circle-fill', danger: 'exclamation-octagon-fill', warning: 'exclamation-triangle-fill', info: 'info-circle-fill'} %}
             {% for type, messages in app.flashes %}
                 {% for message in messages %}
@@ -103,9 +117,11 @@
                 {% endfor %}
             {% endfor %}
 
+            {# Contenu propre à chaque page #}
             {% block body %}{% endblock %}
         </main>
 
+        {# ===== Pied de page ===== #}
         <footer class="site-footer mt-auto">
             <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
                 <a class="marque" href="{{ path('app_accueil') }}">

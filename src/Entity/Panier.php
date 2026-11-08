@@ -7,6 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Panier d'un utilisateur.
+ * Tant que $etat vaut false, c'est le panier "en cours" ;
+ * une fois payé, il devient une commande visible dans l'historique.
+ */
 #[ORM\Entity(repositoryClass: PanierRepository::class)]
 class Panier
 {
@@ -15,18 +20,25 @@ class Panier
     #[ORM\Column]
     private ?int $id = null;
 
+    // Propriétaire du panier
     #[ORM\ManyToOne(inversedBy: 'paniers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
 
+    // Date de l'achat : vide tant que le panier n'est pas payé, remplie automatiquement au paiement
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $dateAchat = null;
 
-    // false = panier en cours, true = payé
+    // false = panier en cours (par défaut), true = panier payé
     #[ORM\Column(options: ['default' => false])]
     private bool $etat = false;
 
-    /** @var Collection<int, ContenuPanier> */
+    /**
+     * Lignes du panier (produit + quantité).
+     * orphanRemoval : une ligne retirée du panier est supprimée de la base.
+     *
+     * @var Collection<int, ContenuPanier>
+     */
     #[ORM\OneToMany(targetEntity: ContenuPanier::class, mappedBy: 'panier', orphanRemoval: true)]
     private Collection $contenus;
 
@@ -76,7 +88,9 @@ class Panier
         return $this;
     }
 
-    /** @return Collection<int, ContenuPanier> */
+    /**
+     * @return Collection<int, ContenuPanier>
+     */
     public function getContenus(): Collection
     {
         return $this->contenus;
@@ -95,6 +109,7 @@ class Panier
     public function removeContenu(ContenuPanier $contenu): static
     {
         if ($this->contenus->removeElement($contenu)) {
+            // On détache la ligne du panier (sauf si elle a déjà été modifiée)
             if ($contenu->getPanier() === $this) {
                 $contenu->setPanier(null);
             }
@@ -103,6 +118,10 @@ class Panier
         return $this;
     }
 
+    /**
+     * Retourne la ligne du panier correspondant à un produit, ou null.
+     * Sert à augmenter la quantité si le produit est déjà dans le panier.
+     */
     public function getContenuPourProduit(Produit $produit): ?ContenuPanier
     {
         foreach ($this->contenus as $contenu) {
@@ -114,6 +133,9 @@ class Panier
         return null;
     }
 
+    /**
+     * Montant total du panier = somme des montants de chaque ligne.
+     */
     public function getTotal(): float
     {
         $total = 0.0;

@@ -1,3 +1,4 @@
+{# Fiche produit : détail, ajout au panier (si connecté), modification / suppression (si ADMIN) #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ produit.nom }}{% endblock %}
@@ -6,12 +7,14 @@
     <a href="{{ path('app_accueil') }}" class="lien-retour"><i class="bi bi-arrow-left"></i> {{ 'bouton.retour_accueil'|trans }}</a>
 
     <div class="row g-4 g-lg-5">
+        {# Colonne de gauche : photo #}
         <div class="col-md-6">
             <div class="fiche-photo">
                 {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 460} %}
             </div>
         </div>
 
+        {# Colonne de droite : stock, nom, prix, description et actions #}
         <div class="col-md-6">
             {% if produit.stock > 0 %}
                 <span class="stock ok">{{ 'produit.en_stock'|trans({'%stock%': produit.stock}) }}</span>
@@ -24,6 +27,7 @@
 
             <p class="fiche-description">{{ produit.description }}</p>
 
+            {# ===== Ajout au panier : "form" n'existe que si l'utilisateur est connecté et le produit en stock ===== #}
             {% if form %}
                 <div class="boite-achat">
                     {{ form_start(form, {attr: {class: 'd-flex flex-wrap align-items-end gap-3'}}) }}
@@ -33,6 +37,7 @@
                         </button>
                     {{ form_end(form) }}
                 </div>
+            {# Visiteur non connecté : invitation à se connecter #}
             {% elseif not app.user %}
                 <div class="alert alert-info my-4">
                     <i class="bi bi-person-lock"></i>
@@ -43,13 +48,15 @@
                 </div>
             {% endif %}
 
+            {# ===== Actions réservées à l'ADMIN (et donc au SUPER_ADMIN) ===== #}
             {% if is_granted('ROLE_ADMIN') %}
                 <div class="actions-admin">
-                    <span class="etiquette">Admin</span>
+                    <span class="etiquette">{{ 'role.admin'|trans }}</span>
                     <a href="{{ path('app_produit_modifier', {id: produit.id}) }}" class="btn btn-outline-dark">
                         <i class="bi bi-pencil"></i> {{ 'bouton.modifier'|trans }}
                     </a>
 
+                    {# Suppression en POST + jeton CSRF, avec une confirmation JavaScript #}
                     <form method="post" action="{{ path('app_produit_supprimer', {id: produit.id}) }}"
                           onsubmit="return confirm('{{ 'produit.confirmer_suppression'|trans|e('js') }}')">
                         <input type="hidden" name="_token" value="{{ csrf_token('supprimer_produit_' ~ produit.id) }}">

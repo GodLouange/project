@@ -13,6 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Page d'accueil : liste des produits.
+ * Un ADMIN y trouve aussi le formulaire d'ajout d'un produit.
+ */
 final class AccueilController extends AbstractController
 {
     #[Route('/', name: 'app_accueil')]
@@ -25,6 +29,7 @@ final class AccueilController extends AbstractController
     ): Response {
         $form = null;
 
+        // Le formulaire d'ajout n'est créé (et traité) que pour un ADMIN
         if ($this->isGranted('ROLE_ADMIN')) {
             $produit = new Produit();
             $form = $this->createForm(ProduitType::class, $produit);
@@ -32,6 +37,7 @@ final class AccueilController extends AbstractController
 
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
+                    // Enregistrement de la photo si un fichier a été envoyé
                     $fichier = $form->get('photoFichier')->getData();
                     if ($fichier) {
                         $produit->setPhoto($photoUploader->enregistrer($fichier));

@@ -13,6 +13,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Formulaire d'ajout / modification d'un produit (réservé aux ADMIN).
+ */
 class ProduitType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -31,6 +34,7 @@ class ProduitType extends AbstractType
                 'label' => 'form.produit.stock',
                 'attr' => ['min' => 0],
             ])
+            // Fichier image : non mappé, l'upload est géré dans le contrôleur
             ->add('photoFichier', FileType::class, [
                 'label' => 'form.produit.photo',
                 'mapped' => false,

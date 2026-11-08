@@ -1,3 +1,4 @@
+{# Page d'inscription (InscriptionType) : l'utilisateur est connecté automatiquement après la création du compte #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'inscription.titre'|trans }}{% endblock %}
@@ -9,11 +10,13 @@
             <h1>{{ 'inscription.titre'|trans }}</h1>
         </div>
 
+        {# form_widget affiche tous les champs avec leurs erreurs de validation #}
         {{ form_start(form) }}
             {{ form_widget(form) }}
             <button type="submit" class="btn btn-primary btn-lg w-100">{{ 'bouton.inscrire'|trans }}</button>
         {{ form_end(form) }}
 
+        {# Lien vers la connexion #}
         <p class="separateur mb-0">
             {{ 'inscription.deja_inscrit'|trans }}
             <a href="{{ path('app_connexion') }}">{{ 'menu.connexion'|trans }}</a>

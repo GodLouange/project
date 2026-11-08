@@ -1,13 +1,16 @@
+{# SUPER_ADMIN : utilisateurs inscrits aujourd'hui #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'super_admin.utilisateurs.titre'|trans }}{% endblock %}
 
 {% block body %}
+    {# Titre + nombre d'inscrits du jour #}
     <div class="titre-section">
         <h1>{{ 'super_admin.utilisateurs.titre'|trans }}</h1>
         <span class="compteur">{{ utilisateurs|length }}</span>
     </div>
 
+    {# Liste déjà triée du plus récent au plus ancien (UtilisateurRepository::findInscritsAujourdhui) #}
     {% if utilisateurs is not empty %}
         <div class="carte table-carte">
             <div class="table-responsive">
@@ -31,6 +34,7 @@
                                     </span>
                                 </td>
                                 <td>{{ utilisateur.email }}</td>
+                                {# Un badge par rôle #}
                                 <td>
                                     {% for role in utilisateur.roles %}<span class="badge-doux">{{ role }}</span>{% endfor %}
                                 </td>
@@ -40,6 +44,7 @@
                 </table>
             </div>
         </div>
+    {# Personne ne s'est inscrit aujourd'hui #}
     {% else %}
         <div class="carte etat-vide">
             <div class="icone"><i class="bi bi-people"></i></div>

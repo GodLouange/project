@@ -1,3 +1,4 @@
+{# Contenu d'une commande payée : même tableau que le Panier, avec la date en plus et sans achat #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'commande.titre'|trans({'%id%': panier.id}) }}{% endblock %}
@@ -5,11 +6,13 @@
 {% block body %}
     <a href="{{ path('app_compte') }}" class="lien-retour"><i class="bi bi-arrow-left"></i> {{ 'bouton.retour_compte'|trans }}</a>
 
+    {# Numéro et date de la commande #}
     <div class="titre-section">
         <h1>{{ 'commande.titre'|trans({'%id%': panier.id}) }}</h1>
         <span class="compteur"><i class="bi bi-calendar3"></i> {{ 'commande.date'|trans }} : {{ panier.dateAchat|date('d/m/Y H:i') }}</span>
     </div>
 
+    {# Tableau partagé, sans bouton de suppression #}
     <div class="carte table-carte">
         {% include '_tableau_panier.html.twig' with {panier: panier, avec_suppression: false} %}
     </div>

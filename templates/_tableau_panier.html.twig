@@ -1,3 +1,9 @@
+{#
+    Tableau des lignes d'un panier, partagé par :
+      - la page Panier (avec_suppression = true : bouton de suppression sur chaque ligne)
+      - la page Contenu de la commande et l'espace SUPER_ADMIN (avec_suppression = false)
+    Variables : panier, avec_suppression
+#}
 <div class="table-responsive">
     <table class="table align-middle">
         <thead>
@@ -10,12 +16,14 @@
             </tr>
         </thead>
         <tbody>
+            {# Une ligne = nom du produit, quantité commandée, prix unitaire, montant (prix × quantité) #}
             {% for ligne in panier.contenus %}
                 <tr>
                     <td><a href="{{ path('app_produit_fiche', {id: ligne.produit.id}) }}">{{ ligne.produit.nom }}</a></td>
                     <td class="text-end">× {{ ligne.quantite }}</td>
                     <td class="text-end text-muted">{{ ligne.produit.prix|number_format(2, ',', ' ') ~ ' €' }}</td>
                     <td class="text-end fw-semibold">{{ ligne.montant|number_format(2, ',', ' ') ~ ' €' }}</td>
+                    {# Suppression de la ligne : formulaire POST protégé par un jeton CSRF #}
                     {% if avec_suppression %}
                         <td class="text-end">
                             <form method="post" action="{{ path('app_panier_supprimer', {id: ligne.id}) }}">
@@ -30,6 +38,7 @@
                 </tr>
             {% endfor %}
         </tbody>
+        {# Montant total du panier (Panier::getTotal()) #}
         <tfoot>
             <tr class="ligne-total">
                 <td colspan="3" class="text-end">{{ 'tableau.total'|trans }}</td>

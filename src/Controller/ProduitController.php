@@ -18,6 +18,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Fiche produit : affichage, ajout au panier, modification et suppression (ADMIN).
+ */
 #[Route('/produit')]
 final class ProduitController extends AbstractController
 {
@@ -25,6 +28,9 @@ final class ProduitController extends AbstractController
     {
     }
 
+    /**
+     * Affiche un produit. Un utilisateur connecté peut l'ajouter à son panier.
+     */
     #[Route('/{id}', name: 'app_produit_fiche', requirements: ['id' => '\d+'])]
     public function fiche(
         Produit $produit,
@@ -34,6 +40,7 @@ final class ProduitController extends AbstractController
     ): Response {
         $form = null;
 
+        // Formulaire d'ajout au panier : uniquement si connecté et si le produit est en stock
         if ($this->getUser() && $produit->getStock() > 0) {
             $form = $this->createForm(AjoutPanierType::class, null, ['stock' => $produit->getStock()]);
             $form->handleRequest($request);
@@ -44,13 +51,16 @@ final class ProduitController extends AbstractController
                     $utilisateur = $this->getUser();
                     $quantite = $form->get('quantite')->getData();
 
+                    // On récupère le panier en cours, ou on en crée un nouveau
                     $panier = $panierRepository->findPanierEnCours($utilisateur);
                     if (!$panier) {
                         $panier = new Panier();
+                        // L'utilisateur connecté est automatiquement attribué à la commande
                         $panier->setUtilisateur($utilisateur);
                         $em->persist($panier);
                     }
 
+                    // Si le produit est déjà dans le panier, on augmente la quantité
                     $ligne = $panier->getContenuPourProduit($produit);
                     $nouvelleQuantite = ($ligne?->getQuantite() ?? 0) + $quantite;
 
@@ -88,6 +98,9 @@ final class ProduitController extends AbstractController
         ]);
     }
 
+    /**
+     * Modification d'un produit (ADMIN uniquement).
+     */
     #[Route('/{id}/modifier', name: 'app_produit_modifier', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
     public function modifier(
@@ -101,6 +114,7 @@ final class ProduitController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+                // Nouvelle photo envoyée : on remplace l'ancienne
                 $fichier = $form->get('photoFichier')->getData();
                 if ($fichier) {
                     $photoUploader->supprimer($produit->getPhoto());
@@ -122,6 +136,9 @@ final class ProduitController extends AbstractController
         ]);
     }
 
+    /**
+     * Suppression d'un produit (ADMIN uniquement, en POST avec jeton CSRF).
+     */
     #[Route('/{id}/supprimer', name: 'app_produit_supprimer', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function supprimer(
@@ -136,7 +153,7 @@ final class ProduitController extends AbstractController
             return $this->redirectToRoute('app_produit_fiche', ['id' => $produit->getId()]);
         }
 
-        // un produit déjà acheté doit rester dans l'historique
+        // Un produit déjà acheté doit rester dans l'historique des commandes : on refuse la suppression
         foreach ($produit->getContenuPaniers() as $ligne) {
             if ($ligne->getPanier()->isEtat()) {
                 $this->addFlash('danger', $this->translator->trans('flash.produit.suppression_impossible'));
@@ -145,6 +162,7 @@ final class ProduitController extends AbstractController
             }
         }
 
+        // On retire le produit des paniers non payés avant de le supprimer
         foreach ($produit->getContenuPaniers() as $ligne) {
             $ligne->getPanier()->removeContenu($ligne);
             $em->remove($ligne);

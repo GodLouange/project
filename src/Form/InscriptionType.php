@@ -12,6 +12,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Formulaire d'inscription : nom, prénom, e-mail et mot de passe (saisi deux fois).
+ */
 class InscriptionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -20,6 +23,7 @@ class InscriptionType extends AbstractType
             ->add('prenom', TextType::class, ['label' => 'form.prenom'])
             ->add('nom', TextType::class, ['label' => 'form.nom'])
             ->add('email', EmailType::class, ['label' => 'form.email'])
+            // Mot de passe en clair : non mappé, il sera haché dans le contrôleur
             ->add('motDePasse', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,

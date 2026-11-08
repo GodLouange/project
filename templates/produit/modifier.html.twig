@@ -1,3 +1,4 @@
+{# Modification d'un produit (ADMIN) : même formulaire que l'ajout (ProduitType) #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'produit.modifier'|trans }}{% endblock %}
@@ -8,6 +9,7 @@
     <h1 class="mb-4">{{ 'produit.modifier'|trans }}</h1>
 
     <div class="row g-4">
+        {# Formulaire : la photo n'est remplacée que si un nouveau fichier est envoyé #}
         <div class="col-lg-8">
             <div class="carte carte-corps">
                 {{ form_start(form) }}
@@ -17,6 +19,7 @@
             </div>
         </div>
 
+        {# Aperçu de la photo actuelle #}
         <div class="col-lg-4">
             <div class="carte overflow-hidden">
                 {% include '_photo_produit.html.twig' with {produit: produit, hauteur: 240} %}

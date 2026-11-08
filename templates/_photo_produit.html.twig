@@ -1,4 +1,9 @@
+{#
+    Photo d'un produit (réutilisée sur l'accueil, la fiche et la page de modification).
+    Variables : produit, hauteur (en pixels), avec_stock (facultatif : affiche le badge de stock)
+#}
 <div class="photo-produit" style="--hauteur: {{ hauteur }}px">
+    {# Photo envoyée par l'admin, sinon un emplacement vide #}
     {% if produit.photo %}
         <img src="{{ asset('uploads/produits/' ~ produit.photo) }}" alt="{{ produit.nom }}" loading="lazy">
     {% else %}
@@ -8,6 +13,7 @@
         </div>
     {% endif %}
 
+    {# Badge "en stock" / "rupture" posé sur la photo #}
     {% if avec_stock ?? false %}
         {% if produit.stock > 0 %}
             <span class="stock ok">{{ 'produit.en_stock'|trans({'%stock%': produit.stock}) }}</span>
