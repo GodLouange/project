@@ -1,4 +1,9 @@
+
+
 # Boutique e-commerce (Symfony 8.1)
+
+## Developper par God-Louange et Djennefing
+
 
 Projet EEMI : boutique en ligne avec panier, historique de commandes et rôles ADMIN / SUPER_ADMIN.
 Paiement fictif. Interface en français et en anglais.
