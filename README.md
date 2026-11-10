@@ -2,7 +2,7 @@
 
 # Boutique e-commerce (Symfony 8.1)
 
-## Developper par God-Louange et Djennefing
+## Developper par God-Louange THOMBET-KENDE et Djennefing SISSOKO
 
 
 Projet EEMI : boutique en ligne avec panier, historique de commandes et rôles ADMIN / SUPER_ADMIN.
